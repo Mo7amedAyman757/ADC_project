@@ -5183,10 +5183,10 @@ void *memccpy (void *restrict, const void *restrict, int, size_t);
 # 23 "MCAL_Layer/interrupt/../GPIO/../std_types.h"
 typedef unsigned char uint8;
 typedef unsigned short uint16;
-typedef unsigned int uint32;
+typedef unsigned long uint32;
 typedef signed char sint8;
 typedef signed short sint16;
-typedef signed int sint32;
+typedef signed long sint32;
 
 typedef uint8 STD_ReturnType;
 # 14 "MCAL_Layer/interrupt/../GPIO/hal_gpio.h" 2
@@ -5617,12 +5617,12 @@ static STD_ReturnType interrupt_INTx_SetInterruptHandler(const interrupt_INTx_t 
 }
 
 void INT0_ISR(void) {
-    (INTCONbits.INT0IF = 0);
 
     if (INT0_InterruptHandler) {
         INT0_InterruptHandler();
     } else {
     }
+    (INTCONbits.INT0IF = 0);
 }
 
 void INT1_ISR(void) {
@@ -5630,6 +5630,15 @@ void INT1_ISR(void) {
 
     if (INT1_InterruptHandler) {
         INT1_InterruptHandler();
+    } else {
+    }
+}
+
+void INT2_ISR(void) {
+    (INTCON3bits.INT2IF = 0);
+
+    if (INT2_InterruptHandler) {
+        INT2_InterruptHandler();
     } else {
     }
 }
@@ -5643,7 +5652,7 @@ static STD_ReturnType interrupt_RBx_enable(const interrupt_RBx_t * int_obj) {
     } else {
         switch (int_obj->source) {
             case INTERRUPT_EXTERNAL_RB4:
-# 421 "MCAL_Layer/interrupt/external_interrupt.c"
+# 430 "MCAL_Layer/interrupt/external_interrupt.c"
                 (INTCONbits.GIE = 1);
                 (INTCONbits.PEIE = 1);
 
@@ -5652,7 +5661,7 @@ static STD_ReturnType interrupt_RBx_enable(const interrupt_RBx_t * int_obj) {
                 ret = (STD_ReturnType)0x01;
                 break;
             case INTERRUPT_EXTERNAL_RB5:
-# 439 "MCAL_Layer/interrupt/external_interrupt.c"
+# 448 "MCAL_Layer/interrupt/external_interrupt.c"
                 (INTCONbits.GIE = 1);
                 (INTCONbits.PEIE = 1);
 
@@ -5661,7 +5670,7 @@ static STD_ReturnType interrupt_RBx_enable(const interrupt_RBx_t * int_obj) {
                 ret = (STD_ReturnType)0x01;
                 break;
             case INTERRUPT_EXTERNAL_RB6:
-# 457 "MCAL_Layer/interrupt/external_interrupt.c"
+# 466 "MCAL_Layer/interrupt/external_interrupt.c"
                 (INTCONbits.GIE = 1);
                 (INTCONbits.PEIE = 1);
 
@@ -5670,7 +5679,7 @@ static STD_ReturnType interrupt_RBx_enable(const interrupt_RBx_t * int_obj) {
                 ret = (STD_ReturnType)0x01;
                 break;
             case INTERRUPT_EXTERNAL_RB7:
-# 475 "MCAL_Layer/interrupt/external_interrupt.c"
+# 484 "MCAL_Layer/interrupt/external_interrupt.c"
                 (INTCONbits.GIE = 1);
                 (INTCONbits.PEIE = 1);
 
@@ -5695,7 +5704,7 @@ static STD_ReturnType interrupt_RBx_disable(const interrupt_RBx_t * int_obj) {
     }
     return ret;
 }
-# 527 "MCAL_Layer/interrupt/external_interrupt.c"
+# 536 "MCAL_Layer/interrupt/external_interrupt.c"
 static STD_ReturnType interrupt_RBx_pin_init(const interrupt_RBx_t * int_obj) {
     STD_ReturnType ret = (STD_ReturnType)0x00;
     if (((void*)0) == int_obj) {
@@ -5758,6 +5767,54 @@ void RB4_ISR(uint8 source) {
     } else if (source == 0) {
         if (RB4_InterruptHandlerLow) {
             RB4_InterruptHandlerLow();
+        } else {
+        }
+    } else {
+    }
+}
+
+void RB5_ISR(uint8 source) {
+    (INTCONbits.RBIF = 0);
+    if (source == 1) {
+        if (RB5_InterruptHandlerHigh) {
+            RB5_InterruptHandlerHigh();
+        } else {
+        }
+    } else if (source == 0) {
+        if (RB5_InterruptHandlerLow) {
+            RB5_InterruptHandlerLow();
+        } else {
+        }
+    } else {
+    }
+}
+
+void RB6_ISR(uint8 source) {
+    (INTCONbits.RBIF = 0);
+    if (source == 1) {
+        if (RB6_InterruptHandlerHigh) {
+            RB6_InterruptHandlerHigh();
+        } else {
+        }
+    } else if (source == 0) {
+        if (RB6_InterruptHandlerLow) {
+            RB6_InterruptHandlerLow();
+        } else {
+        }
+    } else {
+    }
+}
+
+void RB7_ISR(uint8 source) {
+    (INTCONbits.RBIF = 0);
+    if (source == 1) {
+        if (RB7_InterruptHandlerHigh) {
+            RB7_InterruptHandlerHigh();
+        } else {
+        }
+    } else if (source == 0) {
+        if (RB7_InterruptHandlerLow) {
+            RB7_InterruptHandlerLow();
         } else {
         }
     } else {

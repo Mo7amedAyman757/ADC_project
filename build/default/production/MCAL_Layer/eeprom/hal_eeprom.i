@@ -5185,10 +5185,10 @@ void *memccpy (void *restrict, const void *restrict, int, size_t);
 # 23 "MCAL_Layer/eeprom/../interrupt/../GPIO/../std_types.h"
 typedef unsigned char uint8;
 typedef unsigned short uint16;
-typedef unsigned int uint32;
+typedef unsigned long uint32;
 typedef signed char sint8;
 typedef signed short sint16;
-typedef signed int sint32;
+typedef signed long sint32;
 
 typedef uint8 STD_ReturnType;
 # 14 "MCAL_Layer/eeprom/../interrupt/../GPIO/hal_gpio.h" 2
@@ -5256,7 +5256,7 @@ typedef enum {
 # 13 "MCAL_Layer/eeprom/hal_eeprom.h" 2
 # 40 "MCAL_Layer/eeprom/hal_eeprom.h"
 STD_ReturnType data_EEPROM_WriteByte(uint16 data_loc, uint8 data);
-STD_ReturnType data_EEPROM_ReadByte (uint16 data_loc, uint8 *data);
+STD_ReturnType data_EEPROM_ReadByte(uint16 data_loc, uint8 *data);
 # 8 "MCAL_Layer/eeprom/hal_eeprom.c" 2
 # 25 "MCAL_Layer/eeprom/hal_eeprom.c"
 STD_ReturnType data_EEPROM_WriteByte(uint16 data_loc, uint8 data) {

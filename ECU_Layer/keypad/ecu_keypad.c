@@ -8,10 +8,10 @@
 #include "ecu_keypad.h"
 
 static const uint8 keypad_value [ECU_KEYPAD_ROWS][ECU_KEYPAD_COLUMNS] = {
-    {'7', '8', '9', '/'},
-    {'4', '5', '6', '*'},
-    {'1', '2', '3', '-'},
-    {'#', '0', '=', '+'},
+    {'7', '8', '9'},
+    {'4', '5', '6'},
+    {'1', '2', '3'},
+    {'*', '0', '#'},
 };
 
 STD_ReturnType keypad_initialization(const keypad_t *keypad) {

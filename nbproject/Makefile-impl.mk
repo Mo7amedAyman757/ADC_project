@@ -24,7 +24,7 @@ CLEAN_SUBPROJECTS=${CLEAN_SUBPROJECTS_${SUBPROJECTS}}
 
 
 # Project Name
-PROJECTNAME=interfacing Project.X
+PROJECTNAME=Smart_home_masterMCU
 
 # Active Configuration
 DEFAULTCONF=default

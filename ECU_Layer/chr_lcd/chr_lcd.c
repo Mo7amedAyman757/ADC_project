@@ -287,7 +287,7 @@ STD_ReturnType convert_int_to_string(uint32 value, uint8 *str) {
         ret = E_NOK;
     } else {
         memset(str, ' ', 10);
-        sprintf((char *) temp, "%u", value);
+        sprintf((char *) temp, "%lu", value);
         while (temp[l_counter] != '\0') {
             str[l_counter] = temp[l_counter];
             l_counter++;

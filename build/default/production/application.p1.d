@@ -22,14 +22,22 @@ ECU_Layer/keypad/ecu_keypad.h  \
 ECU_Layer/keypad/ecu_keypad_cfg.h  \
 ECU_Layer/chr_lcd/chr_lcd.h  \
 ECU_Layer/chr_lcd/chr_lcd_cfg.h  \
+ECU_Layer/RealTimeDS1307/RealTimeDS1307.h  \
+ECU_Layer/RealTimeDS1307/../../MCAL_Layer/I2C/hal_i2c.h  \
+ECU_Layer/RealTimeDS1307/../../MCAL_Layer/I2C/../interrupt/internal_interrupt.h  \
+ECU_Layer/RealTimeDS1307/../../MCAL_Layer/I2C/../interrupt/mcal_interrupt.h  \
+ECU_Layer/RealTimeDS1307/../../MCAL_Layer/I2C/../interrupt/mcal_interrupt_cfg.h  \
+ECU_Layer/RealTimeDS1307/../UARTLoggingDebugData/UART_LoggingDebugData.h  \
+ECU_Layer/RealTimeDS1307/../UARTLoggingDebugData/../../MCAL_Layer/eusart/hal_eusart.h  \
+ECU_Layer/EEPROM_24C02C/EEPROM_24C02C.h  \
+ECU_Layer/TempSensor_TC74/TempSensor_TC74.h  \
 MCAL_Layer/interrupt/external_interrupt.h  \
-MCAL_Layer/interrupt/mcal_interrupt.h  \
-MCAL_Layer/interrupt/mcal_interrupt_cfg.h  \
 MCAL_Layer/eeprom/hal_eeprom.h  \
-MCAL_Layer/eeprom/../interrupt/internal_interrupt.h  \
 MCAL_Layer/ADC/hal_adc.h  \
 MCAL_Layer/ADC/hal_adc_cfg.h  \
 MCAL_Layer/Timers/hal_timer0.h  \
 MCAL_Layer/Timers/hal_timer1.h  \
 MCAL_Layer/Timers/hal_timer2.h  \
-MCAL_Layer/Timers/hal_timer3.h 
+MCAL_Layer/Timers/hal_timer3.h  \
+MCAL_Layer/CCP/hal_ccp.h  \
+MCAL_Layer/CCP/hal_ccp_cfg.h 

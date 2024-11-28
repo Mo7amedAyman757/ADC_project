@@ -17,43 +17,65 @@
 #include "MCAL_Layer/Timers/hal_timer1.h"
 #include "MCAL_Layer/Timers/hal_timer2.h"
 #include "MCAL_Layer/Timers/hal_timer3.h"
+#include "MCAL_Layer/CCP/hal_ccp.h"
+#include "MCAL_Layer/eusart/hal_eusart.h"
+#include "MCAL_Layer/I2C/hal_i2c.h"
 /*Section : Macro Declaration*/
-
 
 /*Section : Macro Function Declaration*/
 
+/*call back function*/
+void INT0_App_ISR(void);
+void INT1_App_ISR(void);
+void INT2_App_ISR(void);
 /*Section : Data Type Declaration*/
 extern led_t led1;
-extern led_t led2;
-extern led_t led3;
-extern led_t led4;
-//extern button_t btn1;
-//extern button_t btn2;
-//extern relay_t relay;
-extern motor_t motor1;
-extern motor_t motor2;
-//extern segment_t seg;
-//extern keypad_t keypad;
-extern chr_lcd_4bit_t lcd_1;
+extern keypad_t keypad;
 
-uint8 program_selected = 0;
+usart_t usart1 = {
+    .baudrate_gen = EUSART_8BIT_ASYNCHRONOUS_LOW_SPEED,
+    .baudrate_value = 9600,
+    .usart_tx_cfg.usart_tx_enable = EUSART_ASYNCHRONOUS_TX_ENABLE,
+    .usart_tx_cfg.usart_tx_interupt_enable = EUSART_ASYNCHRONOUS_INTURREPT_TX_ENABLE
+
+};
+
+mssp_i2c_t mssp_i2c1 = {
+    .clock = 100000,
+    .i2c_config.i2c_mode = I2C_MASTER_MODE,
+    .i2c_config.i2c_mode_config = MSSP_I2C_MASTER_MODE_CLOCK,
+    .i2c_config.i2c_slew_rate = MSSP_I2C_SLEW_RATE_DISABLE
+};
+
+//interrupt_INTx_t int0_obj = {
+//    .EXT_InterruptHandler = INT0_App_ISR,
+//    .source = INTERRUPT_EXTERNAL_INT0,
+//    .mcu_pin.port = PORTB_INDEX,
+//    .mcu_pin.pin = GPIO_PIN0,
+//    .mcu_pin.direction = GPIO_DIRECTION_INPUT,
+//    .edge = INTERRUPT_RISING_EDGE,
+//};
+//
+//interrupt_INTx_t int1_obj = {
+//    .EXT_InterruptHandler = INT1_App_ISR,
+//    .source = INTERRUPT_EXTERNAL_INT1,
+//    .mcu_pin.port = PORTB_INDEX,
+//    .mcu_pin.pin = GPIO_PIN1,
+//    .mcu_pin.direction = GPIO_DIRECTION_INPUT,
+//    .edge = INTERRUPT_RISING_EDGE,
+//};
+//
+//interrupt_INTx_t int2_obj = {
+//    .EXT_InterruptHandler = INT2_App_ISR,
+//    .source = INTERRUPT_EXTERNAL_INT2,
+//    .mcu_pin.port = PORTB_INDEX,
+//    .mcu_pin.pin = GPIO_PIN2,
+//    .mcu_pin.direction = GPIO_DIRECTION_INPUT,
+//    .edge = INTERRUPT_RISING_EDGE,
+//};
 /*Section : Function Declaration*/
 void application_initialize(void);
-
-uint16 adc_res_1,adc_res_2, adc_res_3;
-uint8 adc_res_1_txt[6],adc_res_2_txt[6],adc_res_3_txt[6];
-uint16 lm35_res, lm35_res_celsuis_mv;
-
-void ADC_Interrupt(void);
-
-ADC_config_t adc_1 = {
-    .InterruptHandler = ADC_Interrupt,
-    .Aquisition_time = ADC_12_TAD,
-    .Channel_Select = ADC_CHANNEL_AN0,
-    .Conversion_Clock = ADC_CONVERSION_CLOCK_FOSC_DIV_16,
-    .result_format = ADC_RESULT_RIGHT,
-    .voltage_reference = ADC_VOLTAGE_REFERENCE_DISABLE,
-};
+void I2C_Master_Call_Slave(uint8 Slave_Address, uint8 temp);
 
 #endif	/* APPLICATION_H */
 

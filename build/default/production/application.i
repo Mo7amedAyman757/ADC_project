@@ -14,7 +14,6 @@
 
 
 
-
 # 1 "./application.h" 1
 # 12 "./application.h"
 # 1 "./ECU_Layer/ecu_layer_init.h" 1
@@ -5187,10 +5186,10 @@ void *memccpy (void *restrict, const void *restrict, int, size_t);
 # 23 "./ECU_Layer/LED/../../MCAL_Layer/GPIO/../std_types.h"
 typedef unsigned char uint8;
 typedef unsigned short uint16;
-typedef unsigned int uint32;
+typedef unsigned long uint32;
 typedef signed char sint8;
 typedef signed short sint16;
-typedef signed int sint32;
+typedef signed long sint32;
 
 typedef uint8 STD_ReturnType;
 # 14 "./ECU_Layer/LED/../../MCAL_Layer/GPIO/hal_gpio.h" 2
@@ -5360,7 +5359,7 @@ STD_ReturnType seven_segment_write_number(const segment_t *segment, uint8 number
 # 21 "./ECU_Layer/keypad/ecu_keypad.h"
 typedef struct {
     pin_config_t keypad_rows_pin[4];
-    pin_config_t keypad_columns_pins[4];
+    pin_config_t keypad_columns_pins[3];
 } keypad_t;
 
 STD_ReturnType keypad_initialization(const keypad_t *keypad);
@@ -5405,22 +5404,158 @@ STD_ReturnType convert_short_to_string(uint16 value, uint8 *str);
 STD_ReturnType convert_int_to_string(uint32 value, uint8 *str);
 # 18 "./ECU_Layer/ecu_layer_init.h" 2
 
+# 1 "./ECU_Layer/RealTimeDS1307/RealTimeDS1307.h" 1
+# 11 "./ECU_Layer/RealTimeDS1307/RealTimeDS1307.h"
+# 1 "./ECU_Layer/RealTimeDS1307/../../MCAL_Layer/I2C/hal_i2c.h" 1
+# 13 "./ECU_Layer/RealTimeDS1307/../../MCAL_Layer/I2C/hal_i2c.h"
+# 1 "./ECU_Layer/RealTimeDS1307/../../MCAL_Layer/I2C/../interrupt/internal_interrupt.h" 1
+# 11 "./ECU_Layer/RealTimeDS1307/../../MCAL_Layer/I2C/../interrupt/internal_interrupt.h"
+# 1 "./ECU_Layer/RealTimeDS1307/../../MCAL_Layer/I2C/../interrupt/mcal_interrupt.h" 1
+# 12 "./ECU_Layer/RealTimeDS1307/../../MCAL_Layer/I2C/../interrupt/mcal_interrupt.h"
+# 1 "./ECU_Layer/RealTimeDS1307/../../MCAL_Layer/I2C/../interrupt/mcal_interrupt_cfg.h" 1
+# 12 "./ECU_Layer/RealTimeDS1307/../../MCAL_Layer/I2C/../interrupt/mcal_interrupt.h" 2
+# 51 "./ECU_Layer/RealTimeDS1307/../../MCAL_Layer/I2C/../interrupt/mcal_interrupt.h"
+typedef enum {
+    INTERRUPT_LOW_PRIORITY,
+    INTERRUPT_HIGH_PRIORITY
+} priority_level_t;
+# 11 "./ECU_Layer/RealTimeDS1307/../../MCAL_Layer/I2C/../interrupt/internal_interrupt.h" 2
+# 13 "./ECU_Layer/RealTimeDS1307/../../MCAL_Layer/I2C/hal_i2c.h" 2
+# 72 "./ECU_Layer/RealTimeDS1307/../../MCAL_Layer/I2C/hal_i2c.h"
+typedef struct {
+    uint8 i2c_mode;
+    uint8 i2c_mode_config;
+    uint8 i2c_slew_rate : 1;
+    uint8 i2c_smbus : 1;
+    uint8 i2c_generel_call : 1;
+    uint8 i2c_master_rec_mode : 1;
+    uint8 i2c_slave_address;
+
+    priority_level_t I2C_priority_cfg;
+    priority_level_t I2C_BUS_Collision_priority_cfg;
+
+} i2c_config_t;
+
+typedef struct {
+    uint32 clock;
+    i2c_config_t i2c_config;
+
+    void(*I2C_Report_Write_Collision)(void);
+    void(*I2C_DefaultInterruptHandler)(void);
+    void(*I2C_Report_Recieve_Overflow)(void);
+
+} mssp_i2c_t;
+
+
+
+STD_ReturnType MSSP_I2C_Init(const mssp_i2c_t *i2c_obj);
+STD_ReturnType MSSP_I2C_DeInit(const mssp_i2c_t *i2c_obj);
+STD_ReturnType MSSP_I2C_Master_Send_Start(const mssp_i2c_t *i2c_obj);
+STD_ReturnType MSSP_I2C_Master_Send_Repeated_Start(const mssp_i2c_t *i2c_obj);
+STD_ReturnType MSSP_I2C_Master_Send_Stop(const mssp_i2c_t *i2c_obj);
+STD_ReturnType MSSP_I2C_Master_Write_Blocking(const mssp_i2c_t *i2c_obj, uint8 i2c_data, uint8 *ack);
+STD_ReturnType MSSP_I2C_Master_Read_Blocking(const mssp_i2c_t *i2c_obj, uint8 ack, uint8 *i2c_data);
+# 11 "./ECU_Layer/RealTimeDS1307/RealTimeDS1307.h" 2
+
+# 1 "./ECU_Layer/RealTimeDS1307/../UARTLoggingDebugData/UART_LoggingDebugData.h" 1
+# 11 "./ECU_Layer/RealTimeDS1307/../UARTLoggingDebugData/UART_LoggingDebugData.h"
+# 1 "./ECU_Layer/RealTimeDS1307/../UARTLoggingDebugData/../../MCAL_Layer/eusart/hal_eusart.h" 1
+# 66 "./ECU_Layer/RealTimeDS1307/../UARTLoggingDebugData/../../MCAL_Layer/eusart/hal_eusart.h"
+typedef enum {
+    EUSART_8BIT_ASYNCHRONOUS_LOW_SPEED,
+    EUSART_8BIT_ASYNCHRONOUS_HIGH_SPEED,
+    EUSART_16BIT_ASYNCHRONOUS_LOW_SPEED,
+    EUSART_16BIT_ASYNCHRONOUS_HIGH_SPEED,
+    EUSART_8BIT_SYNCHRONOUS_SPEED,
+    EUSART_16BIT_SYNCHRONOUS_SPEED,
+} baudrate_gen_t;
+
+typedef struct {
+    uint8 usart_tx_enable : 1;
+    uint8 usart_tx_interupt_enable : 1;
+    uint8 usart_tx_9bit_enable : 1;
+    priority_level_t usart_tx_priority;
+    uint8 usart_tx_reserved : 5;
+} usart_tx_cfg_t;
+
+typedef struct {
+    uint8 usart_rx_enable : 1;
+    uint8 usart_rx_interupt_enable : 1;
+    uint8 usart_rx_9bit_enable : 1;
+    priority_level_t usart_rx_priority;
+    uint8 usart_rx_reserved : 5;
+} usart_rx_cfg_t;
+
+typedef union {
+
+    struct {
+        uint8 usart_ferr : 1;
+        uint8 usart_oerr : 1;
+        uint8 usart_rx_reserve : 6;
+    };
+    uint8 status;
+} usart_error_status_t;
+
+typedef struct {
+    uint32 baudrate_value;
+    baudrate_gen_t baudrate_gen;
+    usart_tx_cfg_t usart_tx_cfg;
+    usart_rx_cfg_t usart_rx_cfg;
+    usart_error_status_t usart_error_status;
+    void(* EUSART_TX_INTERRUPT_HANDLER)(void);
+    void(* EUSART_RX_INTERRUPT_HANDLER)(void);
+    void(* EUSART_FRAMING_INTERRUPT_HANDLER)(void);
+    void(* EUSART_OVERRUN_INTERRUPT_HANDLER)(void);
+} usart_t;
+
+
+STD_ReturnType EUSART_ASYNC_INIT(const usart_t *usart);
+STD_ReturnType EUSART_ASYNC_DEINIT(const usart_t *usart);
+
+STD_ReturnType EUSART_ASYNC_READ_BYTE_BLOCKING(const usart_t *usart, uint8 *data);
+STD_ReturnType EUSART_ASYNC_READ_BYTE_NON_BLOCKING(const usart_t *usart, uint8 *data);
+
+STD_ReturnType EUSART_ASYNC_WRITE_BYTE_BLOCKING(const usart_t *usart, uint8 data);
+STD_ReturnType EUSART_ASYNC_WRITE_STRING_BLOCKING(const usart_t *usart,const uint8 *data, uint16 str_len);
+
+STD_ReturnType EUSART_ASYNC_WRITE_BYTE_NON_BLOCKING(const usart_t *usart, uint8 data);
+STD_ReturnType EUSART_ASYNC_WRITE_STRING_NON_BLOCKING(const usart_t *usart, uint8 *data, uint16 str_len);
+# 11 "./ECU_Layer/RealTimeDS1307/../UARTLoggingDebugData/UART_LoggingDebugData.h" 2
+
+
+void UART_LoggingDebugData_Send_String(const uint8 *Str, uint16 str_len);
+# 12 "./ECU_Layer/RealTimeDS1307/RealTimeDS1307.h" 2
+
+
+typedef struct {
+    uint8 seconds;
+    uint8 minutes;
+    uint8 hours;
+    uint8 day;
+    uint8 month;
+    uint8 year;
+} RealTimeDS1307_t;
+
+RealTimeDS1307_t RealTimeClockDS1307_Get_Date_Time(void);
+void Print_Date(void);
+# 19 "./ECU_Layer/ecu_layer_init.h" 2
+
+
+# 1 "./ECU_Layer/EEPROM_24C02C/EEPROM_24C02C.h" 1
+# 13 "./ECU_Layer/EEPROM_24C02C/EEPROM_24C02C.h"
+void EEPROM_24C02C_Write_Byte(uint8 EEPROM_Address, uint8 Byte_Address, uint8 data);
+uint8 EEPROM_24C02C_Read_Byte(uint8 EEPROM_Address, uint8 Byte_Address);
+# 21 "./ECU_Layer/ecu_layer_init.h" 2
+
+# 1 "./ECU_Layer/TempSensor_TC74/TempSensor_TC74.h" 1
+# 13 "./ECU_Layer/TempSensor_TC74/TempSensor_TC74.h"
+uint8 TempSensor_TC74_Read_Temp(uint8 TC74_Address);
+# 22 "./ECU_Layer/ecu_layer_init.h" 2
 
 void ecu_layer_initialize(void);
 # 12 "./application.h" 2
 
 # 1 "./MCAL_Layer/interrupt/external_interrupt.h" 1
-# 12 "./MCAL_Layer/interrupt/external_interrupt.h"
-# 1 "./MCAL_Layer/interrupt/mcal_interrupt.h" 1
-# 12 "./MCAL_Layer/interrupt/mcal_interrupt.h"
-# 1 "./MCAL_Layer/interrupt/mcal_interrupt_cfg.h" 1
-# 12 "./MCAL_Layer/interrupt/mcal_interrupt.h" 2
-# 51 "./MCAL_Layer/interrupt/mcal_interrupt.h"
-typedef enum {
-    INTERRUPT_LOW_PRIORITY,
-    INTERRUPT_HIGH_PRIORITY
-} priority_level_t;
-# 12 "./MCAL_Layer/interrupt/external_interrupt.h" 2
 # 95 "./MCAL_Layer/interrupt/external_interrupt.h"
 typedef enum {
     INTERRUPT_FALLING_EDGE,
@@ -5464,12 +5599,9 @@ STD_ReturnType interrupt_RBx_deinit(const interrupt_RBx_t * int_obj);
 # 13 "./application.h" 2
 
 # 1 "./MCAL_Layer/eeprom/hal_eeprom.h" 1
-# 13 "./MCAL_Layer/eeprom/hal_eeprom.h"
-# 1 "./MCAL_Layer/eeprom/../interrupt/internal_interrupt.h" 1
-# 13 "./MCAL_Layer/eeprom/hal_eeprom.h" 2
 # 40 "./MCAL_Layer/eeprom/hal_eeprom.h"
 STD_ReturnType data_EEPROM_WriteByte(uint16 data_loc, uint8 data);
-STD_ReturnType data_EEPROM_ReadByte (uint16 data_loc, uint8 *data);
+STD_ReturnType data_EEPROM_ReadByte(uint16 data_loc, uint8 *data);
 # 14 "./application.h" 2
 
 # 1 "./MCAL_Layer/ADC/hal_adc.h" 1
@@ -5650,104 +5782,162 @@ STD_ReturnType Timer3_Write_value(const timer3_t *timer, uint16 value);
 STD_ReturnType Timer3_Read_value(const timer3_t *timer, uint16 *value);
 # 19 "./application.h" 2
 
+# 1 "./MCAL_Layer/CCP/hal_ccp.h" 1
+# 12 "./MCAL_Layer/CCP/hal_ccp.h"
+# 1 "./MCAL_Layer/CCP/hal_ccp_cfg.h" 1
+# 12 "./MCAL_Layer/CCP/hal_ccp.h" 2
+# 97 "./MCAL_Layer/CCP/hal_ccp.h"
+typedef enum {
+    CCP_CAPTURE_SELECT,
+    CCP_COMPARE_SELECT,
+    CCP_PWM_SELECT
+} ccp_mode_t;
+
+typedef enum {
+    CCP1_CCP2_TIMER1,
+    CCP1_TIMER1_CCP2_TIMER3,
+    CCP1_CCP2_TIMER3
+} ccp_capture_compare_timer3_t;
+
+typedef union {
+
+    struct {
+        uint8 ccpr_low;
+        uint8 ccpr_high;
+    };
+
+    struct {
+        uint16 ccpr_16bit;
+    };
+
+} CCP_REG_T;
+
+
+
+typedef enum {
+    CCP1_INST,
+    CCP2_INST
+} ccp_inst_t;
+
+typedef struct {
+    ccp_inst_t ccp_inst;
+    ccp_mode_t ccp_mode;
+    pin_config_t pin_cfg;
+    uint8 ccp_mode_variant;
+    ccp_capture_compare_timer3_t ccp_capture_compare_timer3;
+
+    void(* CCP1_InterruptHandler)(void);
+    priority_level_t ccp1_priority;
+
+
+
+    void(* CCP2_InterruptHandler)(void);
+    priority_level_t ccp2_priority;
 
 
 
 
 
+
+
+} ccp_t;
+
+
+
+STD_ReturnType CCP_Init(const ccp_t * ccp);
+
+STD_ReturnType CCP_DeInit(const ccp_t * ccp);
+
+
+
+STD_ReturnType CCP_IsCaptureDataReady(uint8 *capture_status);
+
+STD_ReturnType CCP_CaptureDataRead(const ccp_t * ccp, uint16 *capture_value);
+
+
+
+
+STD_ReturnType CCP_IsCompareComplete(uint8 *compare_status);
+
+STD_ReturnType CCP_CompareSetValue(const ccp_t * ccp, uint16 compare_value);
+# 20 "./application.h" 2
+
+
+
+
+
+
+
+
+void INT0_App_ISR(void);
+void INT1_App_ISR(void);
+void INT2_App_ISR(void);
 
 extern led_t led1;
-extern led_t led2;
-extern led_t led3;
-extern led_t led4;
+extern keypad_t keypad;
 
+usart_t usart1 = {
+    .baudrate_gen = EUSART_8BIT_ASYNCHRONOUS_LOW_SPEED,
+    .baudrate_value = 9600,
+    .usart_tx_cfg.usart_tx_enable = 1,
+    .usart_tx_cfg.usart_tx_interupt_enable = 1
 
-
-extern motor_t motor1;
-extern motor_t motor2;
-
-
-extern chr_lcd_4bit_t lcd_1;
-
-uint8 program_selected = 0;
-
-void application_initialize(void);
-
-uint16 adc_res_1,adc_res_2, adc_res_3;
-uint8 adc_res_1_txt[6],adc_res_2_txt[6],adc_res_3_txt[6];
-uint16 lm35_res, lm35_res_celsuis_mv;
-
-void ADC_Interrupt(void);
-
-ADC_config_t adc_1 = {
-    .InterruptHandler = ADC_Interrupt,
-    .Aquisition_time = ADC_12_TAD,
-    .Channel_Select = ADC_CHANNEL_AN0,
-    .Conversion_Clock = ADC_CONVERSION_CLOCK_FOSC_DIV_16,
-    .result_format = 0x01U,
-    .voltage_reference = 0x00U,
 };
-# 9 "application.c" 2
+
+mssp_i2c_t mssp_i2c1 = {
+    .clock = 100000,
+    .i2c_config.i2c_mode = 1,
+    .i2c_config.i2c_mode_config = 0x08U,
+    .i2c_config.i2c_slew_rate = 1
+};
+# 77 "./application.h"
+void application_initialize(void);
+void I2C_Master_Call_Slave(uint8 Slave_Address, uint8 temp);
+# 8 "application.c" 2
 
 
-
+uint8 ack = 0;
 STD_ReturnType ret = (STD_ReturnType)0x01;
-uint8 ADC_flag;
+RealTimeDS1307_t RealTimeDS1307;
+
+uint8 U4Program = 0;
+uint8 TC74_A7_TempVal = 0;
+uint8 last_temp_sent = 0xFF;
 
 int main() {
     application_initialize();
-    lcd_4bit_send_char_string_pos(&lcd_1, 1, 4, (uint8 *) "ADC TEST");
-    _delay((unsigned long)((1000)*(8000000UL/4000.0)));
-    lcd_4bit_send_command(&lcd_1, 0x01);
-    ret = lcd_4bit_send_char_string_pos(&lcd_1, 1, 2, (uint8 *) " POT1: ");
-    ret = lcd_4bit_send_char_string_pos(&lcd_1, 2, 1, (uint8 *) "POT2: ");
+
+    UART_LoggingDebugData_Send_String((uint8 *) "System Started\r", 16);
+
     while (1) {
+        RealTimeDS1307 = RealTimeClockDS1307_Get_Date_Time();
+        Print_Date();
+        TC74_A7_TempVal = TempSensor_TC74_Read_Temp(0x9E);
 
-        if (ADC_flag == 0) {
-            ret = ADC_StartConversion_Interrupt(&adc_1, ADC_CHANNEL_AN0);
-        } else if (ADC_flag == 1) {
-            ret = ADC_StartConversion_Interrupt(&adc_1, ADC_CHANNEL_AN1);
-        } else if (ADC_flag == 2) {
-            ret = ADC_StartConversion_Interrupt(&adc_1, ADC_CHANNEL_AN2);
+
+
+        if (TC74_A7_TempVal != last_temp_sent) {
+            EEPROM_24C02C_Write_Byte(0xA2, 0x00, TC74_A7_TempVal);
+            I2C_Master_Call_Slave(0x70, TC74_A7_TempVal);
+            last_temp_sent = TC74_A7_TempVal;
         }
-
-        ret = convert_short_to_string(adc_res_1, adc_res_1_txt);
-        ret = convert_short_to_string(adc_res_2, adc_res_2_txt);
-
-        ret = lcd_4bit_send_char_string_pos(&lcd_1, 1, 7, adc_res_1_txt);
-        ret = lcd_4bit_send_char_string_pos(&lcd_1, 2, 7, adc_res_2_txt);
-
-        lm35_res_celsuis_mv = (uint16) (lm35_res * 4.88f);
-        lm35_res_celsuis_mv /= 10;
-
-
-
-        if (lm35_res_celsuis_mv > 25) {
-            motor_move_forward(&motor1);
-            motor_move_forward(&motor2);
-        } else if (lm35_res_celsuis_mv <= 25) {
-            motor_move_backward(&motor1);
-            motor_move_backward(&motor2);
-        } else {
-
-        }
+        _delay((unsigned long)((1000)*(16000000UL/4000.0)));
     }
 }
 
 void application_initialize(void) {
     ecu_layer_initialize();
-    ret = ADC_init(&adc_1);
+    EUSART_ASYNC_INIT(&usart1);
+    MSSP_I2C_Init(&mssp_i2c1);
 }
 
-void ADC_Interrupt(void) {
-    if (ADC_flag == 0) {
-        ret = ADC_GetConversionResult(&adc_1, &adc_res_1);
-        ADC_flag = 1;
-    } else if (ADC_flag == 1) {
-        ret = ADC_GetConversionResult(&adc_1, &adc_res_2);
-        ADC_flag = 2;
-    } else if (ADC_flag == 2) {
-        ret = ADC_GetConversionResult(&adc_1, &lm35_res);
-        ADC_flag = 0;
-    }
+void I2C_Master_Call_Slave(uint8 Slave_Address, uint8 temp) {
+
+    MSSP_I2C_Master_Send_Start(&mssp_i2c1);
+
+    MSSP_I2C_Master_Write_Blocking(&mssp_i2c1, Slave_Address, &ack);
+
+    MSSP_I2C_Master_Write_Blocking(&mssp_i2c1, temp, &ack);
+
+    MSSP_I2C_Master_Send_Stop(&mssp_i2c1);
 }

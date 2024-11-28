@@ -5,68 +5,68 @@
  * Created on September 2, 2024, 2:20 PM
  */
 
-
 #include "application.h"
 
-
+uint8 ack = 0;
 STD_ReturnType ret = E_OK;
-uint8 ADC_flag;
+RealTimeDS1307_t RealTimeDS1307;
+
+uint8 U4Program = 0;
+uint8 TC74_A7_TempVal = 0;
+uint8 last_temp_sent = 0xFF;
 
 int main() {
     application_initialize();
-    lcd_4bit_send_char_string_pos(&lcd_1, 1, 4, (uint8 *) "ADC TEST");
-    __delay_ms(1000);
-    lcd_4bit_send_command(&lcd_1, _LCD_CLEAR);
-    ret = lcd_4bit_send_char_string_pos(&lcd_1, 1, 2, (uint8 *) " POT1: ");
-    ret = lcd_4bit_send_char_string_pos(&lcd_1, 2, 1, (uint8 *) "POT2: ");
+
+    UART_LoggingDebugData_Send_String((uint8 *) "System Started\r", 16);
+
     while (1) {
-
-        if (ADC_flag == 0) {
-            ret = ADC_StartConversion_Interrupt(&adc_1, ADC_CHANNEL_AN0);
-        } else if (ADC_flag == 1) {
-            ret = ADC_StartConversion_Interrupt(&adc_1, ADC_CHANNEL_AN1);
-        } else if (ADC_flag == 2) {
-            ret = ADC_StartConversion_Interrupt(&adc_1, ADC_CHANNEL_AN2);
+        RealTimeDS1307 = RealTimeClockDS1307_Get_Date_Time();
+        Print_Date();
+        TC74_A7_TempVal = TempSensor_TC74_Read_Temp(0x9E);
+        //EEPROM_24C02C_Write_Byte(0xA2, 0x00, TC74_A7_TempVal);
+        //I2C_Master_Call_Slave(0x70, TC74_A7_TempVal);
+        // Send the temperature to the slave only if it has changed
+        if (TC74_A7_TempVal != last_temp_sent) {
+            EEPROM_24C02C_Write_Byte(0xA2, 0x00, TC74_A7_TempVal);
+            I2C_Master_Call_Slave(0x70, TC74_A7_TempVal);
+            last_temp_sent = TC74_A7_TempVal; // Update the last sent temperature
         }
-
-        ret = convert_short_to_string(adc_res_1, adc_res_1_txt);
-        ret = convert_short_to_string(adc_res_2, adc_res_2_txt);
-
-        ret = lcd_4bit_send_char_string_pos(&lcd_1, 1, 7, adc_res_1_txt);
-        ret = lcd_4bit_send_char_string_pos(&lcd_1, 2, 7, adc_res_2_txt);
-
-        lm35_res_celsuis_mv = (uint16) (lm35_res * 4.88f);
-        lm35_res_celsuis_mv /= 10;
-
-        //        ret = convert_short_to_string(lm35_res_celsuis_mv, adc_res_2_txt);
-        //        ret = lcd_4bit_send_char_string_pos(&lcd_1, 1, 10, adc_res_2_txt);
-        if (lm35_res_celsuis_mv > 25) {
-            motor_move_forward(&motor1);
-            motor_move_forward(&motor2);
-        } else if (lm35_res_celsuis_mv <= 25) {
-            motor_move_backward(&motor1);
-            motor_move_backward(&motor2);
-        } else {
-
-        }
+        __delay_ms(1000);
     }
 }
 
 void application_initialize(void) {
     ecu_layer_initialize();
-    ret = ADC_init(&adc_1);
+    EUSART_ASYNC_INIT(&usart1);
+    MSSP_I2C_Init(&mssp_i2c1);
 }
 
-void ADC_Interrupt(void) {
-    if (ADC_flag == 0) {
-        ret = ADC_GetConversionResult(&adc_1, &adc_res_1);
-        ADC_flag = 1;
-    } else if (ADC_flag == 1) {
-        ret = ADC_GetConversionResult(&adc_1, &adc_res_2);
-        ADC_flag = 2;
-    } else if (ADC_flag == 2) {
-        ret = ADC_GetConversionResult(&adc_1, &lm35_res);
-        ADC_flag = 0;
-    }
+void I2C_Master_Call_Slave(uint8 Slave_Address, uint8 temp) {
+    //Slave_Address --> 0x70
+    MSSP_I2C_Master_Send_Start(&mssp_i2c1);
+    /*Send Slave Address with write bit*/
+    MSSP_I2C_Master_Write_Blocking(&mssp_i2c1, Slave_Address, &ack);
+    // Send temperature value
+    MSSP_I2C_Master_Write_Blocking(&mssp_i2c1, temp, &ack);
+    // Stop I2C communication
+    MSSP_I2C_Master_Send_Stop(&mssp_i2c1);
 }
 
+//void INT0_App_ISR(void) {
+//    EEPROM_24C02C_Write_Byte(0xA2, 0x00, 0x01);
+//    __delay_ms(5);
+//    U4Program = EEPROM_24C02C_Read_Byte(0xA2, 0x00);
+//}
+//
+//void INT1_App_ISR(void) {
+//    EEPROM_24C02C_Write_Byte(0xA2, 0x00, 0x02);
+//    __delay_ms(5);
+//    U4Program = EEPROM_24C02C_Read_Byte(0xA2, 0x00);
+//}
+//
+//void INT2_App_ISR(void) {
+//    EEPROM_24C02C_Write_Byte(0xA2, 0x00, 0x03);
+//    __delay_ms(5);
+//    U4Program = EEPROM_24C02C_Read_Byte(0xA2, 0x00);
+//}

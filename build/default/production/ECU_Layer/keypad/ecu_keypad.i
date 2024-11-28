@@ -5182,10 +5182,10 @@ void *memccpy (void *restrict, const void *restrict, int, size_t);
 # 23 "ECU_Layer/keypad/../../MCAL_Layer/GPIO/../std_types.h"
 typedef unsigned char uint8;
 typedef unsigned short uint16;
-typedef unsigned int uint32;
+typedef unsigned long uint32;
 typedef signed char sint8;
 typedef signed short sint16;
-typedef signed int sint32;
+typedef signed long sint32;
 
 typedef uint8 STD_ReturnType;
 # 14 "ECU_Layer/keypad/../../MCAL_Layer/GPIO/hal_gpio.h" 2
@@ -5253,7 +5253,7 @@ STD_ReturnType gpio_port_toggle_logic(const port_index_t port);
 
 typedef struct {
     pin_config_t keypad_rows_pin[4];
-    pin_config_t keypad_columns_pins[4];
+    pin_config_t keypad_columns_pins[3];
 } keypad_t;
 
 STD_ReturnType keypad_initialization(const keypad_t *keypad);
@@ -5261,11 +5261,11 @@ STD_ReturnType keypad_get_value(const keypad_t *keypad, uint8 *value);
 # 8 "ECU_Layer/keypad/ecu_keypad.c" 2
 
 
-static const uint8 keypad_value [4][4] = {
-    {'7', '8', '9', '/'},
-    {'4', '5', '6', '*'},
-    {'1', '2', '3', '-'},
-    {'#', '0', '=', '+'},
+static const uint8 keypad_value [4][3] = {
+    {'7', '8', '9'},
+    {'4', '5', '6'},
+    {'1', '2', '3'},
+    {'*', '0', '#'},
 };
 
 STD_ReturnType keypad_initialization(const keypad_t *keypad) {
@@ -5277,7 +5277,7 @@ STD_ReturnType keypad_initialization(const keypad_t *keypad) {
         for (rows_counter = 0; rows_counter < 4; rows_counter++) {
             gpio_pin_initialization(&(keypad->keypad_rows_pin[rows_counter]));
         }
-        for (columns_counter = 0; columns_counter < 4; columns_counter++) {
+        for (columns_counter = 0; columns_counter < 3; columns_counter++) {
             gpio_pin_initialization(&(keypad->keypad_columns_pins[columns_counter]));
         }
     }
@@ -5297,10 +5297,10 @@ STD_ReturnType keypad_get_value(const keypad_t *keypad, uint8 * value) {
                 gpio_pin_write_logic(&(keypad->keypad_rows_pin[l_counter]), GPIO_LOW);
             }
             gpio_pin_write_logic(&(keypad->keypad_rows_pin[rows_counter]), GPIO_HIGH);
-            for (columns_counter = 0; columns_counter < 4; columns_counter++) {
+            for (columns_counter = 0; columns_counter < 3; columns_counter++) {
                 gpio_pin_read_logic(&(keypad->keypad_columns_pins[columns_counter]), &column_logic);
                 if (column_logic == GPIO_HIGH) {
-                    _delay((unsigned long)((10)*(8000000UL/4000.0)));
+                    _delay((unsigned long)((10)*(16000000UL/4000.0)));
                     gpio_pin_read_logic(&(keypad->keypad_columns_pins[columns_counter]), &column_logic);
                     if (column_logic == GPIO_HIGH) {
                         *value = keypad_value[rows_counter][columns_counter];

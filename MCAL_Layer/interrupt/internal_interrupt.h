@@ -86,10 +86,88 @@
 #define TIMER3_LOW_PRIORITY()         (IPR2bits.TMR3IP = 0)
 #endif
 #endif
+/************CCP1************/
+#if CCP1_INTERRUPT_FEATURE_ENABLE == INTERRUPT_FEATURE_ENABLE
+/*Enable CCP1 interrupt*/
+#define CCP1_INTERRUPT_ENABLE()      (PIE1bits.CCP1IE = 1)
+/*Disable CCP1 interrupt*/
+#define CCP1_INTERRUPT_DISABLE()     (PIE1bits.CCP1IE= 0)
+/*Clear flag of CCP1 interrupt*/
+#define CCP1_INTERRUPT_CLEAR_FLAG()  (PIR1bits.CCP1IF = 0)
+#if INTERRUPT_PRIORITY_LEVEL_ENABLE == INTERRUPT_FEATURE_ENABLE
+/*This macro will enable high  priority of CCP1 module*/
+#define CCP1_HIGH_PRIORITY()        (IPR1bits.CCP1IP = 1)
+/*This macro will enable low  priority of CCP1 module*/
+#define CCP1_LOW_PRIORITY()         (IPR1bits.CCP1IP = 0)
+#endif
+#endif
+/************CCP2************/
+#if CCP2_INTERRUPT_FEATURE_ENABLE == INTERRUPT_FEATURE_ENABLE
+/*Enable CCP2 interrupt*/
+#define CCP2_INTERRUPT_ENABLE()      (PIE2bits.CCP2IE = 1)
+/*Disable CCP2 interrupt*/
+#define CCP2_INTERRUPT_DISABLE()     (PIE2bits.CCP2IE= 0)
+/*Clear flag of CCP2 interrupt*/
+#define CCP2_INTERRUPT_CLEAR_FLAG()  (PIR2bits.CCP2IF = 0)
+#if INTERRUPT_PRIORITY_LEVEL_ENABLE == INTERRUPT_FEATURE_ENABLE
+/*This macro will enable high  priority of CCP2 module*/
+#define CCP2_HIGH_PRIORITY()        (IPR2bits.CCP2IP = 1)
+/*This macro will enable low  priority of CCP2 module*/
+#define CCP2_LOW_PRIORITY()         (IPR2bits.CCP2IP = 0)
+#endif
+#endif
+/************EUSART_TX************/
+#if EUSART_TX_INTERRUPT_FEATURE_ENABLE == INTERRUPT_FEATURE_ENABLE
+/*Enable EUSART_TX interrupt*/
+#define EUSART_TX_INTERRUPT_ENABLE()      (PIE1bits.TXIE = 1)
+/*Disable EUSART_TX interrupt*/
+#define EUSART_TX_INTERRUPT_DISABLE()     (PIE1bits.TXIE= 0)
+#if INTERRUPT_PRIORITY_LEVEL_ENABLE == INTERRUPT_FEATURE_ENABLE
+/*This macro will enable high  priority of EUSART_TX module*/
+#define EUSART_TX_HIGH_PRIORITY()        (IPR1bits.TXIP = 1)
+/*This macro will enable low  priority of EUSART_TX module*/
+#define EUSART_TX_LOW_PRIORITY()         (IPR1bits.TXIP = 0)
+#endif
+#endif
+/************EUSART_RX************/
+#if EUSART_RX_INTERRUPT_FEATURE_ENABLE == INTERRUPT_FEATURE_ENABLE
+/*Enable EUSART_RX interrupt*/
+#define EUSART_RX_INTERRUPT_ENABLE()      (PIE1bits.RCIE = 1)
+/*Disable EUSART_RX interrupt*/
+#define EUSART_RX_INTERRUPT_DISABLE()     (PIE1bits.RCIE= 0)
+#if INTERRUPT_PRIORITY_LEVEL_ENABLE == INTERRUPT_FEATURE_ENABLE
+/*This macro will enable high  priority of EUSART_RX module*/
+#define EUSART_RX_HIGH_PRIORITY()        (IPR1bits.RCIP = 1)
+/*This macro will enable low  priority of EUSART_RX module*/
+#define EUSART_RX_LOW_PRIORITY()         (IPR1bits.RCIP = 0)
+#endif
+#endif
+/************I2C************/
+#if I2C_INTERRUPT_FEATURE_ENABLE == INTERRUPT_FEATURE_ENABLE
+/*Enable I2C interrupt*/
+#define MSSP_I2C_INTERRUPT_ENABLE()               (PIE1bits.SSPIE = 1)
+/*Disable I2C interrupt*/
+#define MSSP_I2C_INTERRUPT_DISABLE()              (PIE1bits.SSPIE= 0)
+/*Clear flag of I2C interrupt*/
+#define MSSP_I2C_INTERRUPT_CLEAR_FLAG()           (PIR1bits.SSPIF = 0)
+/*Enable Bus Collision interrupt*/
+#define MSSP_BUS_COLLISION_INTERRUPT_ENABLE()     (PIE2bits.BCLIE = 1)
+/*Disable Bus Collision interrupt*/
+#define MSSP_BUS_COLLISION_INTERRUPT_DISABLE()    (PIE2bits.BCLIE = 0)
+/*Clear flag of Bus Collision interrupt*/
+#define MSSP_BUS_COLLISION_INTERRUPT_CLEAR_FLAG() (PIR2bits.BCLIF = 0)
+#if INTERRUPT_PRIORITY_LEVEL_ENABLE == INTERRUPT_FEATURE_ENABLE
+/*This macro will enable high  priority of I2C module*/
+#define MSSP_I2C_HIGH_PRIORITY()               (IPR1bits.SSPIP = 1)
+/*This macro will enable low  priority of I2C module*/
+#define MSSP_I2C_LOW_PRIORITY()                (IPR1bits.SSPIP = 0)
+/*This macro will enable high  priority of Bus Collision module*/
+#define MSSP_BUS_COLLISION_HIGH_PRIORITY()     (IPR2bits.BCLIP = 1)
+/*This macro will enable low  priority of Bus Collision module*/
+#define MSSP_BUS_COLLISION_LOW_PRIORITY()      (IPR2bits.BCLIP = 0)
+#endif
+#endif
 /*Section : Macro Declaration*/
-
-
-
 
 
 /*Section : Data Type Declaration*/

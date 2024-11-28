@@ -38,7 +38,7 @@
 
 /*Section : Function Declaration*/
 STD_ReturnType data_EEPROM_WriteByte(uint16 data_loc, uint8 data);
-STD_ReturnType data_EEPROM_ReadByte (uint16 data_loc, uint8 *data);
+STD_ReturnType data_EEPROM_ReadByte(uint16 data_loc, uint8 *data);
 
 #endif	/* HAL_EEPROM_H */
 

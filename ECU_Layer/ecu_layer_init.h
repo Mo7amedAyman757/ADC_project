@@ -16,7 +16,10 @@
 #include "7_segment/ecu_seven_seg.h"
 #include "keypad/ecu_keypad.h"
 #include "chr_lcd/chr_lcd.h"
-
+#include "RealTimeDS1307/RealTimeDS1307.h"
+#include "UARTLoggingDebugData/UART_LoggingDebugData.h"
+#include "EEPROM_24C02C/EEPROM_24C02C.h"
+#include "TempSensor_TC74/TempSensor_TC74.h"
 void ecu_layer_initialize(void);
 
 #endif	/* ECU_LAYER_INIT_H */

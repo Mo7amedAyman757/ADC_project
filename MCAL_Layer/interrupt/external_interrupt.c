@@ -382,12 +382,12 @@ static STD_ReturnType interrupt_INTx_SetInterruptHandler(const interrupt_INTx_t 
 }
 
 void INT0_ISR(void) {
-    EXT_INT0_INTERRUPT_CLEAR_FLAG();
 
     if (INT0_InterruptHandler) {
         INT0_InterruptHandler();
     } else {
     }
+    EXT_INT0_INTERRUPT_CLEAR_FLAG();
 }
 
 void INT1_ISR(void) {
@@ -395,6 +395,15 @@ void INT1_ISR(void) {
 
     if (INT1_InterruptHandler) {
         INT1_InterruptHandler();
+    } else {
+    }
+}
+
+void INT2_ISR(void) {
+    EXT_INT2_INTERRUPT_CLEAR_FLAG();
+
+    if (INT2_InterruptHandler) {
+        INT2_InterruptHandler();
     } else {
     }
 }
@@ -586,6 +595,54 @@ void RB4_ISR(uint8 source) {
     } else if (source == 0) {
         if (RB4_InterruptHandlerLow) {
             RB4_InterruptHandlerLow();
+        } else {
+        }
+    } else {
+    }
+}
+
+void RB5_ISR(uint8 source) {
+    EXT_RBX_INTERRUPT_CLEAR_FLAG();
+    if (source == 1) {
+        if (RB5_InterruptHandlerHigh) {
+            RB5_InterruptHandlerHigh();
+        } else {
+        }
+    } else if (source == 0) {
+        if (RB5_InterruptHandlerLow) {
+            RB5_InterruptHandlerLow();
+        } else {
+        }
+    } else {
+    }
+}
+
+void RB6_ISR(uint8 source) {
+    EXT_RBX_INTERRUPT_CLEAR_FLAG();
+    if (source == 1) {
+        if (RB6_InterruptHandlerHigh) {
+            RB6_InterruptHandlerHigh();
+        } else {
+        }
+    } else if (source == 0) {
+        if (RB6_InterruptHandlerLow) {
+            RB6_InterruptHandlerLow();
+        } else {
+        }
+    } else {
+    }
+}
+
+void RB7_ISR(uint8 source) {
+    EXT_RBX_INTERRUPT_CLEAR_FLAG();
+    if (source == 1) {
+        if (RB7_InterruptHandlerHigh) {
+            RB7_InterruptHandlerHigh();
+        } else {
+        }
+    } else if (source == 0) {
+        if (RB7_InterruptHandlerLow) {
+            RB7_InterruptHandlerLow();
         } else {
         }
     } else {

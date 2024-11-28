@@ -5184,10 +5184,10 @@ void *memccpy (void *restrict, const void *restrict, int, size_t);
 # 23 "ECU_Layer/LED/../../MCAL_Layer/GPIO/../std_types.h"
 typedef unsigned char uint8;
 typedef unsigned short uint16;
-typedef unsigned int uint32;
+typedef unsigned long uint32;
 typedef signed char sint8;
 typedef signed short sint16;
-typedef signed int sint32;
+typedef signed long sint32;
 
 typedef uint8 STD_ReturnType;
 # 14 "ECU_Layer/LED/../../MCAL_Layer/GPIO/hal_gpio.h" 2
@@ -5357,7 +5357,7 @@ STD_ReturnType seven_segment_write_number(const segment_t *segment, uint8 number
 # 21 "ECU_Layer/keypad/ecu_keypad.h"
 typedef struct {
     pin_config_t keypad_rows_pin[4];
-    pin_config_t keypad_columns_pins[4];
+    pin_config_t keypad_columns_pins[3];
 } keypad_t;
 
 STD_ReturnType keypad_initialization(const keypad_t *keypad);
@@ -5402,6 +5402,153 @@ STD_ReturnType convert_short_to_string(uint16 value, uint8 *str);
 STD_ReturnType convert_int_to_string(uint32 value, uint8 *str);
 # 18 "ECU_Layer/ecu_layer_init.h" 2
 
+# 1 "ECU_Layer/RealTimeDS1307/RealTimeDS1307.h" 1
+# 11 "ECU_Layer/RealTimeDS1307/RealTimeDS1307.h"
+# 1 "ECU_Layer/RealTimeDS1307/../../MCAL_Layer/I2C/hal_i2c.h" 1
+# 13 "ECU_Layer/RealTimeDS1307/../../MCAL_Layer/I2C/hal_i2c.h"
+# 1 "ECU_Layer/RealTimeDS1307/../../MCAL_Layer/I2C/../interrupt/internal_interrupt.h" 1
+# 11 "ECU_Layer/RealTimeDS1307/../../MCAL_Layer/I2C/../interrupt/internal_interrupt.h"
+# 1 "ECU_Layer/RealTimeDS1307/../../MCAL_Layer/I2C/../interrupt/mcal_interrupt.h" 1
+# 12 "ECU_Layer/RealTimeDS1307/../../MCAL_Layer/I2C/../interrupt/mcal_interrupt.h"
+# 1 "ECU_Layer/RealTimeDS1307/../../MCAL_Layer/I2C/../interrupt/mcal_interrupt_cfg.h" 1
+# 12 "ECU_Layer/RealTimeDS1307/../../MCAL_Layer/I2C/../interrupt/mcal_interrupt.h" 2
+# 51 "ECU_Layer/RealTimeDS1307/../../MCAL_Layer/I2C/../interrupt/mcal_interrupt.h"
+typedef enum {
+    INTERRUPT_LOW_PRIORITY,
+    INTERRUPT_HIGH_PRIORITY
+} priority_level_t;
+# 11 "ECU_Layer/RealTimeDS1307/../../MCAL_Layer/I2C/../interrupt/internal_interrupt.h" 2
+# 13 "ECU_Layer/RealTimeDS1307/../../MCAL_Layer/I2C/hal_i2c.h" 2
+# 72 "ECU_Layer/RealTimeDS1307/../../MCAL_Layer/I2C/hal_i2c.h"
+typedef struct {
+    uint8 i2c_mode;
+    uint8 i2c_mode_config;
+    uint8 i2c_slew_rate : 1;
+    uint8 i2c_smbus : 1;
+    uint8 i2c_generel_call : 1;
+    uint8 i2c_master_rec_mode : 1;
+    uint8 i2c_slave_address;
+
+    priority_level_t I2C_priority_cfg;
+    priority_level_t I2C_BUS_Collision_priority_cfg;
+
+} i2c_config_t;
+
+typedef struct {
+    uint32 clock;
+    i2c_config_t i2c_config;
+
+    void(*I2C_Report_Write_Collision)(void);
+    void(*I2C_DefaultInterruptHandler)(void);
+    void(*I2C_Report_Recieve_Overflow)(void);
+
+} mssp_i2c_t;
+
+
+
+STD_ReturnType MSSP_I2C_Init(const mssp_i2c_t *i2c_obj);
+STD_ReturnType MSSP_I2C_DeInit(const mssp_i2c_t *i2c_obj);
+STD_ReturnType MSSP_I2C_Master_Send_Start(const mssp_i2c_t *i2c_obj);
+STD_ReturnType MSSP_I2C_Master_Send_Repeated_Start(const mssp_i2c_t *i2c_obj);
+STD_ReturnType MSSP_I2C_Master_Send_Stop(const mssp_i2c_t *i2c_obj);
+STD_ReturnType MSSP_I2C_Master_Write_Blocking(const mssp_i2c_t *i2c_obj, uint8 i2c_data, uint8 *ack);
+STD_ReturnType MSSP_I2C_Master_Read_Blocking(const mssp_i2c_t *i2c_obj, uint8 ack, uint8 *i2c_data);
+# 11 "ECU_Layer/RealTimeDS1307/RealTimeDS1307.h" 2
+
+# 1 "ECU_Layer/RealTimeDS1307/../UARTLoggingDebugData/UART_LoggingDebugData.h" 1
+# 11 "ECU_Layer/RealTimeDS1307/../UARTLoggingDebugData/UART_LoggingDebugData.h"
+# 1 "ECU_Layer/RealTimeDS1307/../UARTLoggingDebugData/../../MCAL_Layer/eusart/hal_eusart.h" 1
+# 66 "ECU_Layer/RealTimeDS1307/../UARTLoggingDebugData/../../MCAL_Layer/eusart/hal_eusart.h"
+typedef enum {
+    EUSART_8BIT_ASYNCHRONOUS_LOW_SPEED,
+    EUSART_8BIT_ASYNCHRONOUS_HIGH_SPEED,
+    EUSART_16BIT_ASYNCHRONOUS_LOW_SPEED,
+    EUSART_16BIT_ASYNCHRONOUS_HIGH_SPEED,
+    EUSART_8BIT_SYNCHRONOUS_SPEED,
+    EUSART_16BIT_SYNCHRONOUS_SPEED,
+} baudrate_gen_t;
+
+typedef struct {
+    uint8 usart_tx_enable : 1;
+    uint8 usart_tx_interupt_enable : 1;
+    uint8 usart_tx_9bit_enable : 1;
+    priority_level_t usart_tx_priority;
+    uint8 usart_tx_reserved : 5;
+} usart_tx_cfg_t;
+
+typedef struct {
+    uint8 usart_rx_enable : 1;
+    uint8 usart_rx_interupt_enable : 1;
+    uint8 usart_rx_9bit_enable : 1;
+    priority_level_t usart_rx_priority;
+    uint8 usart_rx_reserved : 5;
+} usart_rx_cfg_t;
+
+typedef union {
+
+    struct {
+        uint8 usart_ferr : 1;
+        uint8 usart_oerr : 1;
+        uint8 usart_rx_reserve : 6;
+    };
+    uint8 status;
+} usart_error_status_t;
+
+typedef struct {
+    uint32 baudrate_value;
+    baudrate_gen_t baudrate_gen;
+    usart_tx_cfg_t usart_tx_cfg;
+    usart_rx_cfg_t usart_rx_cfg;
+    usart_error_status_t usart_error_status;
+    void(* EUSART_TX_INTERRUPT_HANDLER)(void);
+    void(* EUSART_RX_INTERRUPT_HANDLER)(void);
+    void(* EUSART_FRAMING_INTERRUPT_HANDLER)(void);
+    void(* EUSART_OVERRUN_INTERRUPT_HANDLER)(void);
+} usart_t;
+
+
+STD_ReturnType EUSART_ASYNC_INIT(const usart_t *usart);
+STD_ReturnType EUSART_ASYNC_DEINIT(const usart_t *usart);
+
+STD_ReturnType EUSART_ASYNC_READ_BYTE_BLOCKING(const usart_t *usart, uint8 *data);
+STD_ReturnType EUSART_ASYNC_READ_BYTE_NON_BLOCKING(const usart_t *usart, uint8 *data);
+
+STD_ReturnType EUSART_ASYNC_WRITE_BYTE_BLOCKING(const usart_t *usart, uint8 data);
+STD_ReturnType EUSART_ASYNC_WRITE_STRING_BLOCKING(const usart_t *usart,const uint8 *data, uint16 str_len);
+
+STD_ReturnType EUSART_ASYNC_WRITE_BYTE_NON_BLOCKING(const usart_t *usart, uint8 data);
+STD_ReturnType EUSART_ASYNC_WRITE_STRING_NON_BLOCKING(const usart_t *usart, uint8 *data, uint16 str_len);
+# 11 "ECU_Layer/RealTimeDS1307/../UARTLoggingDebugData/UART_LoggingDebugData.h" 2
+
+
+void UART_LoggingDebugData_Send_String(const uint8 *Str, uint16 str_len);
+# 12 "ECU_Layer/RealTimeDS1307/RealTimeDS1307.h" 2
+
+
+typedef struct {
+    uint8 seconds;
+    uint8 minutes;
+    uint8 hours;
+    uint8 day;
+    uint8 month;
+    uint8 year;
+} RealTimeDS1307_t;
+
+RealTimeDS1307_t RealTimeClockDS1307_Get_Date_Time(void);
+void Print_Date(void);
+# 19 "ECU_Layer/ecu_layer_init.h" 2
+
+
+# 1 "ECU_Layer/EEPROM_24C02C/EEPROM_24C02C.h" 1
+# 13 "ECU_Layer/EEPROM_24C02C/EEPROM_24C02C.h"
+void EEPROM_24C02C_Write_Byte(uint8 EEPROM_Address, uint8 Byte_Address, uint8 data);
+uint8 EEPROM_24C02C_Read_Byte(uint8 EEPROM_Address, uint8 Byte_Address);
+# 21 "ECU_Layer/ecu_layer_init.h" 2
+
+# 1 "ECU_Layer/TempSensor_TC74/TempSensor_TC74.h" 1
+# 13 "ECU_Layer/TempSensor_TC74/TempSensor_TC74.h"
+uint8 TempSensor_TC74_Read_Temp(uint8 TC74_Address);
+# 22 "ECU_Layer/ecu_layer_init.h" 2
 
 void ecu_layer_initialize(void);
 # 8 "ECU_Layer/ecu_layer_init.c" 2
@@ -5409,132 +5556,53 @@ void ecu_layer_initialize(void);
 
 
 led_t led1 = {
-    .port = PORTC_INDEX,
+    .port = PORTD_INDEX,
     .pin = GPIO_PIN0,
     .led_status = GPIO_LOW
 };
-
-led_t led2 = {
-    .port = PORTC_INDEX,
-    .pin = GPIO_PIN1,
-    .led_status = GPIO_LOW
-};
-
-led_t led3 = {
-    .port = PORTC_INDEX,
-    .pin = GPIO_PIN2,
-    .led_status = GPIO_LOW
-};
-
-led_t led4 = {
-    .port = PORTC_INDEX,
-    .pin = GPIO_PIN3,
-    .led_status = GPIO_HIGH
-};
-# 59 "ECU_Layer/ecu_layer_init.c"
-motor_t motor1 = {
-    .motor[0].port = PORTC_INDEX,
-    .motor[0].pin = GPIO_PIN0,
-    .motor[0].direction = GPIO_DIRECTION_OUTPUT,
-    .motor[0].logic = 0x00U,
-
-    .motor[1].port = PORTC_INDEX,
-    .motor[1].pin = GPIO_PIN1,
-    .motor[1].direction = GPIO_DIRECTION_OUTPUT,
-    .motor[1].logic = 0x00U,
-};
-
-motor_t motor2 = {
-    .motor[0].port = PORTC_INDEX,
-    .motor[0].pin = GPIO_PIN2,
-    .motor[0].direction = GPIO_DIRECTION_OUTPUT,
-    .motor[0].logic = 0x00U,
-
-    .motor[1].port = PORTC_INDEX,
-    .motor[1].pin = GPIO_PIN3,
-    .motor[1].direction = GPIO_DIRECTION_OUTPUT,
-    .motor[1].logic = 0x00U,
-};
 # 107 "ECU_Layer/ecu_layer_init.c"
 keypad_t keypad = {
-    .keypad_rows_pin[0].port = PORTC_INDEX,
+    .keypad_rows_pin[0].port = PORTD_INDEX,
     .keypad_rows_pin[0].pin = GPIO_PIN0,
     .keypad_rows_pin[0].direction = GPIO_DIRECTION_OUTPUT,
     .keypad_rows_pin[0].logic = GPIO_LOW,
 
-    .keypad_rows_pin[1].port = PORTC_INDEX,
+    .keypad_rows_pin[1].port = PORTD_INDEX,
     .keypad_rows_pin[1].pin = GPIO_PIN1,
     .keypad_rows_pin[1].direction = GPIO_DIRECTION_OUTPUT,
     .keypad_rows_pin[1].logic = GPIO_LOW,
 
-    .keypad_rows_pin[2].port = PORTC_INDEX,
+    .keypad_rows_pin[2].port = PORTD_INDEX,
     .keypad_rows_pin[2].pin = GPIO_PIN2,
     .keypad_rows_pin[2].direction = GPIO_DIRECTION_OUTPUT,
     .keypad_rows_pin[2].logic = GPIO_LOW,
 
-    .keypad_rows_pin[3].port = PORTC_INDEX,
+    .keypad_rows_pin[3].port = PORTD_INDEX,
     .keypad_rows_pin[3].pin = GPIO_PIN3,
     .keypad_rows_pin[3].direction = GPIO_DIRECTION_OUTPUT,
     .keypad_rows_pin[3].logic = GPIO_LOW,
 
-    .keypad_columns_pins[0].port = PORTC_INDEX,
+    .keypad_columns_pins[0].port = PORTD_INDEX,
     .keypad_columns_pins[0].pin = GPIO_PIN4,
     .keypad_columns_pins[0].direction = GPIO_DIRECTION_INPUT,
     .keypad_columns_pins[0].logic = GPIO_LOW,
 
-    .keypad_columns_pins[1].port = PORTC_INDEX,
+    .keypad_columns_pins[1].port = PORTD_INDEX,
     .keypad_columns_pins[1].pin = GPIO_PIN5,
     .keypad_columns_pins[1].direction = GPIO_DIRECTION_INPUT,
     .keypad_columns_pins[1].logic = GPIO_LOW,
 
-    .keypad_columns_pins[2].port = PORTC_INDEX,
+    .keypad_columns_pins[2].port = PORTD_INDEX,
     .keypad_columns_pins[2].pin = GPIO_PIN6,
     .keypad_columns_pins[2].direction = GPIO_DIRECTION_INPUT,
     .keypad_columns_pins[2].logic = GPIO_LOW,
-
-    .keypad_columns_pins[3].port = PORTC_INDEX,
-    .keypad_columns_pins[3].pin = GPIO_PIN7,
-    .keypad_columns_pins[3].direction = GPIO_DIRECTION_INPUT,
-    .keypad_columns_pins[3].logic = GPIO_LOW,
 };
-
-chr_lcd_4bit_t lcd_1 = {
-    .lcd_rs.port = PORTC_INDEX,
-    .lcd_rs.pin = GPIO_PIN4,
-    .lcd_rs.direction = GPIO_DIRECTION_OUTPUT,
-    .lcd_rs.logic = GPIO_LOW,
-
-    .lcd_en.port = PORTC_INDEX,
-    .lcd_en.pin = GPIO_PIN5,
-    .lcd_en.direction = GPIO_DIRECTION_OUTPUT,
-    .lcd_en.logic = GPIO_LOW,
-
-    .lcd_data[0].port = PORTC_INDEX,
-    .lcd_data[0].pin = GPIO_PIN6,
-    .lcd_data[0].direction = GPIO_DIRECTION_OUTPUT,
-    .lcd_data[0].logic = GPIO_LOW,
-
-    .lcd_data[1].port = PORTC_INDEX,
-    .lcd_data[1].pin = GPIO_PIN7,
-    .lcd_data[1].direction = GPIO_DIRECTION_OUTPUT,
-    .lcd_data[1].logic = GPIO_LOW,
-
-    .lcd_data[2].port = PORTD_INDEX,
-    .lcd_data[2].pin = GPIO_PIN0,
-    .lcd_data[2].direction = GPIO_DIRECTION_OUTPUT,
-    .lcd_data[2].logic = GPIO_LOW,
-
-    .lcd_data[3].port = PORTD_INDEX,
-    .lcd_data[3].pin = GPIO_PIN1,
-    .lcd_data[3].direction = GPIO_DIRECTION_OUTPUT,
-    .lcd_data[3].logic = GPIO_LOW,
-};
-
+# 176 "ECU_Layer/ecu_layer_init.c"
 void ecu_layer_initialize(void) {
     led_initialization(&led1);
-    led_initialization(&led2);
-    led_initialization(&led3);
-    led_initialization(&led4);
+
+
+
     keypad_initialization(&keypad);
-    lcd_4bit_initialize(&lcd_1);
+
 }

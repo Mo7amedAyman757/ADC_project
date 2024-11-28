@@ -11,34 +11,23 @@ Version 4.0 HI-TECH Software Intermediate Code
 [n E3245 . GPIO_PIN0 GPIO_PIN1 GPIO_PIN2 GPIO_PIN3 GPIO_PIN4 GPIO_PIN5 GPIO_PIN6 GPIO_PIN7  ]
 [c E3230 0 1 .. ]
 [n E3230 . GPIO_LOW GPIO_HIGH  ]
-"64 ECU_Layer/chr_lcd/../../MCAL_Layer/GPIO/hal_gpio.h
+"64 ECU_Layer/RealTimeDS1307/../UARTLoggingDebugData/../../MCAL_Layer/eusart/../GPIO/hal_gpio.h
 [s S306 :3 `uc 1 :3 `uc 1 :1 `uc 1 :1 `uc 1 ]
 [n S306 . port pin direction logic ]
-"21 ECU_Layer/motor/ecu_motor.h
-[; ;ECU_Layer/motor/ecu_motor.h: 21: typedef struct {
-[s S310 `S306 -> 2 `i ]
-[n S310 . motor ]
-"59 ECU_Layer/ecu_layer_init.c
-[; ;ECU_Layer/ecu_layer_init.c: 59: motor_t motor1 = {
-[c E3234 0 1 .. ]
-[n E3234 . GPIO_DIRECTION_OUTPUT GPIO_DIRECTION_INPUT  ]
 "21 ECU_Layer/keypad/ecu_keypad.h
 [; ;ECU_Layer/keypad/ecu_keypad.h: 21: typedef struct {
-[s S312 `S306 -> 4 `i `S306 -> 4 `i ]
+[s S312 `S306 -> 4 `i `S306 -> 3 `i ]
 [n S312 . keypad_rows_pin keypad_columns_pins ]
-"35 ECU_Layer/chr_lcd/chr_lcd.h
-[; ;ECU_Layer/chr_lcd/chr_lcd.h: 35: typedef struct {
-[s S313 `S306 1 `S306 1 `S306 -> 4 `i ]
-[n S313 . lcd_rs lcd_en lcd_data ]
+"107 ECU_Layer/ecu_layer_init.c
+[; ;ECU_Layer/ecu_layer_init.c: 107: keypad_t keypad = {
+[c E3234 0 1 .. ]
+[n E3234 . GPIO_DIRECTION_OUTPUT GPIO_DIRECTION_INPUT  ]
 "34 ECU_Layer/LED/ecu_led.h
 [; ;ECU_Layer/LED/ecu_led.h: 34: STD_ReturnType led_initialization(const led_t *led);
 [v _led_initialization `(uc ~T0 @X0 0 ef1`*CS307 ]
 "26 ECU_Layer/keypad/ecu_keypad.h
 [; ;ECU_Layer/keypad/ecu_keypad.h: 26: STD_ReturnType keypad_initialization(const keypad_t *keypad);
 [v _keypad_initialization `(uc ~T0 @X0 0 ef1`*CS312 ]
-"47 ECU_Layer/chr_lcd/chr_lcd.h
-[; ;ECU_Layer/chr_lcd/chr_lcd.h: 47: STD_ReturnType lcd_4bit_initialize(const chr_lcd_4bit_t *lcd);
-[v _lcd_4bit_initialize `(uc ~T0 @X0 0 ef1`*CS313 ]
 "54 C:/Program Files/Microchip/MPLABX/v6.20/packs/Microchip/PIC18F-K_DFP/1.13.292/xc8\pic\include\proc\pic18f46k20.h
 [; ;C:/Program Files/Microchip/MPLABX/v6.20/packs/Microchip/PIC18F-K_DFP/1.13.292/xc8\pic\include\proc\pic18f46k20.h: 54: __asm("SSPMSK equ 0F77h");
 [; <" SSPMSK equ 0F77h ;# ">
@@ -486,91 +475,9 @@ Version 4.0 HI-TECH Software Intermediate Code
 [i _led1
 :U ..
 :U ..
--> . `E3238 2 `uc
+-> . `E3238 3 `uc
 -> . `E3245 0 `uc
 -> . `E3230 0 `uc
-..
-..
-]
-"17
-[; ;ECU_Layer/ecu_layer_init.c: 17: led_t led2 = {
-[v _led2 `S307 ~T0 @X0 1 e ]
-[i _led2
-:U ..
-:U ..
--> . `E3238 2 `uc
--> . `E3245 1 `uc
--> . `E3230 0 `uc
-..
-..
-]
-"23
-[; ;ECU_Layer/ecu_layer_init.c: 23: led_t led3 = {
-[v _led3 `S307 ~T0 @X0 1 e ]
-[i _led3
-:U ..
-:U ..
--> . `E3238 2 `uc
--> . `E3245 2 `uc
--> . `E3230 0 `uc
-..
-..
-]
-"29
-[; ;ECU_Layer/ecu_layer_init.c: 29: led_t led4 = {
-[v _led4 `S307 ~T0 @X0 1 e ]
-[i _led4
-:U ..
-:U ..
--> . `E3238 2 `uc
--> . `E3245 3 `uc
--> . `E3230 1 `uc
-..
-..
-]
-"59
-[; ;ECU_Layer/ecu_layer_init.c: 59: motor_t motor1 = {
-[v _motor1 `S310 ~T0 @X0 1 e ]
-[i _motor1
-:U ..
-:U ..
-:U ..
-:U ..
--> . `E3238 2 `uc
--> . `E3245 0 `uc
--> . `E3234 0 `uc
--> -> 0 `ui `uc
-..
-:U ..
--> . `E3238 2 `uc
--> . `E3245 1 `uc
--> . `E3234 0 `uc
--> -> 0 `ui `uc
-..
-..
-..
-..
-]
-"71
-[; ;ECU_Layer/ecu_layer_init.c: 71: motor_t motor2 = {
-[v _motor2 `S310 ~T0 @X0 1 e ]
-[i _motor2
-:U ..
-:U ..
-:U ..
-:U ..
--> . `E3238 2 `uc
--> . `E3245 2 `uc
--> . `E3234 0 `uc
--> -> 0 `ui `uc
-..
-:U ..
--> . `E3238 2 `uc
--> . `E3245 3 `uc
--> . `E3234 0 `uc
--> -> 0 `ui `uc
-..
-..
 ..
 ..
 ]
@@ -582,25 +489,25 @@ Version 4.0 HI-TECH Software Intermediate Code
 :U ..
 :U ..
 :U ..
--> . `E3238 2 `uc
+-> . `E3238 3 `uc
 -> . `E3245 0 `uc
 -> . `E3234 0 `uc
 -> . `E3230 0 `uc
 ..
 :U ..
--> . `E3238 2 `uc
+-> . `E3238 3 `uc
 -> . `E3245 1 `uc
 -> . `E3234 0 `uc
 -> . `E3230 0 `uc
 ..
 :U ..
--> . `E3238 2 `uc
+-> . `E3238 3 `uc
 -> . `E3245 2 `uc
 -> . `E3234 0 `uc
 -> . `E3230 0 `uc
 ..
 :U ..
--> . `E3238 2 `uc
+-> . `E3238 3 `uc
 -> . `E3245 3 `uc
 -> . `E3234 0 `uc
 -> . `E3230 0 `uc
@@ -608,26 +515,20 @@ Version 4.0 HI-TECH Software Intermediate Code
 ..
 :U ..
 :U ..
--> . `E3238 2 `uc
+-> . `E3238 3 `uc
 -> . `E3245 4 `uc
 -> . `E3234 1 `uc
 -> . `E3230 0 `uc
 ..
 :U ..
--> . `E3238 2 `uc
+-> . `E3238 3 `uc
 -> . `E3245 5 `uc
 -> . `E3234 1 `uc
 -> . `E3230 0 `uc
 ..
 :U ..
--> . `E3238 2 `uc
+-> . `E3238 3 `uc
 -> . `E3245 6 `uc
--> . `E3234 1 `uc
--> . `E3230 0 `uc
-..
-:U ..
--> . `E3238 2 `uc
--> . `E3245 7 `uc
 -> . `E3234 1 `uc
 -> . `E3230 0 `uc
 ..
@@ -635,82 +536,19 @@ Version 4.0 HI-TECH Software Intermediate Code
 ..
 ..
 ]
-"149
-[; ;ECU_Layer/ecu_layer_init.c: 149: chr_lcd_4bit_t lcd_1 = {
-[v _lcd_1 `S313 ~T0 @X0 1 e ]
-[i _lcd_1
-:U ..
-:U ..
-:U ..
-:U ..
--> . `E3238 2 `uc
--> . `E3245 4 `uc
--> . `E3234 0 `uc
--> . `E3230 0 `uc
-..
-..
-:U ..
-:U ..
--> . `E3238 2 `uc
--> . `E3245 5 `uc
--> . `E3234 0 `uc
--> . `E3230 0 `uc
-..
-..
-:U ..
-:U ..
--> . `E3238 2 `uc
--> . `E3245 6 `uc
--> . `E3234 0 `uc
--> . `E3230 0 `uc
-..
-:U ..
--> . `E3238 2 `uc
--> . `E3245 7 `uc
--> . `E3234 0 `uc
--> . `E3230 0 `uc
-..
-:U ..
--> . `E3238 3 `uc
--> . `E3245 0 `uc
--> . `E3234 0 `uc
--> . `E3230 0 `uc
-..
-:U ..
--> . `E3238 3 `uc
--> . `E3245 1 `uc
--> . `E3234 0 `uc
--> . `E3230 0 `uc
-..
-..
-..
-..
-]
-"181
-[; ;ECU_Layer/ecu_layer_init.c: 181: void ecu_layer_initialize(void) {
+"176
+[; ;ECU_Layer/ecu_layer_init.c: 176: void ecu_layer_initialize(void) {
 [v _ecu_layer_initialize `(v ~T0 @X0 1 ef ]
 {
 [e :U _ecu_layer_initialize ]
 [f ]
-"182
-[; ;ECU_Layer/ecu_layer_init.c: 182:     led_initialization(&led1);
+"177
+[; ;ECU_Layer/ecu_layer_init.c: 177:     led_initialization(&led1);
 [e ( _led_initialization (1 -> &U _led1 `*CS307 ]
-"183
-[; ;ECU_Layer/ecu_layer_init.c: 183:     led_initialization(&led2);
-[e ( _led_initialization (1 -> &U _led2 `*CS307 ]
-"184
-[; ;ECU_Layer/ecu_layer_init.c: 184:     led_initialization(&led3);
-[e ( _led_initialization (1 -> &U _led3 `*CS307 ]
-"185
-[; ;ECU_Layer/ecu_layer_init.c: 185:     led_initialization(&led4);
-[e ( _led_initialization (1 -> &U _led4 `*CS307 ]
-"186
-[; ;ECU_Layer/ecu_layer_init.c: 186:     keypad_initialization(&keypad);
+"181
+[; ;ECU_Layer/ecu_layer_init.c: 181:     keypad_initialization(&keypad);
 [e ( _keypad_initialization (1 -> &U _keypad `*CS312 ]
-"187
-[; ;ECU_Layer/ecu_layer_init.c: 187:     lcd_4bit_initialize(&lcd_1);
-[e ( _lcd_4bit_initialize (1 -> &U _lcd_1 `*CS313 ]
-"188
-[; ;ECU_Layer/ecu_layer_init.c: 188: }
-[e :UE 315 ]
+"183
+[; ;ECU_Layer/ecu_layer_init.c: 183: }
+[e :UE 323 ]
 }
